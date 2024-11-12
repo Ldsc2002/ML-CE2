@@ -10,7 +10,7 @@ services:
       DB_PASS: atleta_pass
     depends_on:
       - db
-      - ml_model
+      - model
 
   ml_model:
     image: model
@@ -25,7 +25,7 @@ services:
       POSTGRES_PASSWORD: atleta_pass 
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db_data:

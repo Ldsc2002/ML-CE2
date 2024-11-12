@@ -11,7 +11,7 @@ services:
       DB_PASS: atleta_pass
     depends_on:
       - db
-      - ml_model
+      - model
 
   ml_model:
     build:
