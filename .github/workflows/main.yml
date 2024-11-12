@@ -1,0 +1,38 @@
+name: Build Docker Images and Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build App Docker Image
+        run: |
+          docker build -t app ./app
+          docker save app -o app.tar
+
+      - name: Build ML Model Docker Image
+        run: |
+          docker build -t model ./model
+          docker save model -o model.tar
+
+      - name: Create a new Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag: v0.0.1
+          files: |
+            app.tar
+            model.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release
+        run: echo "Release created"
