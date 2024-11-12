@@ -46,4 +46,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release
-        run: echo "Release created"
+        run: echo "Release created with tag ${{ steps.create_release.outputs.tag }}"
