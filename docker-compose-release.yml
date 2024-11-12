@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      image: app
+    ports:
+      - "5100:5000"
+    environment:
+      DB_HOST: db
+      DB_NAME: atleta_db
+      DB_USER: atleta_user
+      DB_PASS: atleta_pass
+    depends_on:
+      - db
+      - ml_model
+
+  ml_model:
+    build:
+      image: model
+    ports:
+      - "5101:5001"
+    
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: atleta_db
+      POSTGRES_USER: atleta_user
+      POSTGRES_PASSWORD: atleta_pass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:

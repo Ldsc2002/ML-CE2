@@ -42,6 +42,7 @@ jobs:
           files: |
             app.tar
             model.tar
+            docker-compose-release.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
