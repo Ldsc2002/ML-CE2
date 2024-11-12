@@ -26,15 +26,14 @@ jobs:
       - name: Tag the repository
         id: tag
         run: |
-          # See https://docs.github.com/en/get-started/using-git/dealing-with-special-characters-in-branch-and-tag-names
           git config user.name "GitHub Action"
-          git config user.email "action@git.com
+          git config user.email "action@git.com"
           TAG=v$(date -Iseconds | sed 's/[T:\+]/-/g')
           echo "$TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           git tag -a $TAG -m "Published version $TAG" ${GITHUB_SHA}
           git push origin $TAG
-
+          
       - name: Create a new Release
         id: create_release
         uses: softprops/action-gh-release@v2
