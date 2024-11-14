@@ -11,7 +11,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY model.py ./
-COPY model.joblib ./
+COPY model.json ./
 
 # Exponer el puerto de la API del modelo
 EXPOSE 5001

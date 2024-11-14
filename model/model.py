@@ -1,21 +1,31 @@
 from flask import Flask, request, jsonify
-import joblib
+import xgboost as xgb
+import pandas as pd
 
 app = Flask(__name__)
-model = joblib.load('model.joblib')
+model = xgb.Booster()
+model.load_model('model.json')
 actividadesValidas = ['caminadora', 'correr']
 
 @app.route('/predictTime', methods=['POST'])
 def predict_time():
     distancia = request.args.get('distancia')
-    tipoActividad = request.args.get('tipo_actividad')
+    rank = request.args.get('ranking')
+    edad = request.args.get('edad')
+    sexo = request.args.get('sexo')
+    sexo = 1 if sexo == 'M' else 0
 
-    if tipoActividad not in actividadesValidas:
-        return jsonify({"error": "Tipo de actividad no válido" , "actividades": actividadesValidas}), 400
+    distancia = int(distancia)
+    rank = int(rank)
+    edad = int(edad)
+    sexo = int(sexo)
 
-    prediction = model.predict([[distancia, actividadesValidas.index(tipoActividad)]])
+    df = pd.DataFrame([[sexo, rank, distancia, edad]], columns=['sex', 'place_in_class', 'distance', 'age'])
+    data = xgb.DMatrix(df)
+
+    prediction = model.predict(data)
     
-    return jsonify({"predictedTime": prediction[0]}), 200
+    return jsonify({"predictedTime": str(prediction[0])}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
